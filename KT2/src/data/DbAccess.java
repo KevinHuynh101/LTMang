@@ -44,6 +44,7 @@ public class DbAccess {
             return  null;
         }
     }
+    
     public static List<NhanVien> findNVQuanLy() {
         List<NhanVien> studentList = new ArrayList<>();
          Connection connection = null;
@@ -90,6 +91,7 @@ public class DbAccess {
         //ket thuc.
          return studentList;
     }
+    //////
     public static List<NhanVien> findNV() {
         List<NhanVien> studentList = new ArrayList<>();
          Connection connection = null;
@@ -137,6 +139,7 @@ public class DbAccess {
          return studentList;
     }
     
+    ////
     public static List<MatHang> findMatHang() {
         List<MatHang> studentList = new ArrayList<>();
          Connection connection = null;
@@ -158,6 +161,52 @@ public class DbAccess {
                         resultSet.getString("TENMH"),resultSet.getInt("GIABAN"), 
                         resultSet.getString("DVT"),resultSet.getString("MALOAI")
                         ,resultSet.getString("MOTA"),resultSet.getBoolean("VOHIEUHOA"));
+                studentList.add(std);
+            }
+            System.out.println(studentList);
+        }catch (SQLException ex) {
+            Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        //ket thuc.
+         return studentList;
+    }
+    
+    ///
+    public static List<String> findLoaiMH() {
+        List<String> studentList = new ArrayList<>();
+         Connection connection = null;
+        Statement statement = null;
+        try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql = "select * from LOAI_MAT_HANG ;";
+            
+            statement = connection.createStatement();           
+            ResultSet resultSet = statement.executeQuery(sql);
+            System.out.println(resultSet);
+            
+            while (resultSet.next()) {                
+                String std = resultSet.getString("MALOAI");
+                       
                 studentList.add(std);
             }
             System.out.println(studentList);
