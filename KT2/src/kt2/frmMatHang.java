@@ -6,10 +6,17 @@ package kt2;
 
 import data.DbAccess;
 import data.MatHang;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -20,6 +27,7 @@ public class frmMatHang extends javax.swing.JFrame {
 
     DefaultTableModel tableModel;
     List<MatHang> studentList = new ArrayList<>();
+    
     /**
      * Creates new form frmMatHang
      */
@@ -48,6 +56,19 @@ public class frmMatHang extends javax.swing.JFrame {
                 ,student.getMoTa(),student.isVoHieuHoa()});
         });    
     }
+    String c ;
+    private void checkForm(){
+        StringBuffer sb= new StringBuffer();
+        if(cbVoHieuHoa.isSelected())
+        {
+            sb.append("True");
+        }
+        else
+                sb.append("False");
+        cbVoHieuHoa.setText(sb.toString());
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,11 +94,11 @@ public class frmMatHang extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtMoTa = new javax.swing.JTextArea();
         txtGia = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
-        jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -91,7 +112,7 @@ public class frmMatHang extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7"
+                "Mã môn học", "Tên môn học", "Giá", "DVT", "Mã loại", "Mô tả", "Vô hiệu hóa"
             }
         ));
         tblMatHang.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -117,7 +138,11 @@ public class frmMatHang extends javax.swing.JFrame {
 
         jLabel5.setText("DVT");
 
-        cbVoHieuHoa.setText("Vô hiệu hóa");
+        cbVoHieuHoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbVoHieuHoaActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Mô tả");
 
@@ -125,19 +150,38 @@ public class frmMatHang extends javax.swing.JFrame {
         txtMoTa.setRows(5);
         jScrollPane2.setViewportView(txtMoTa);
 
+        jLabel8.setText("Vô hiệu hóa");
+
         jMenu1.setText("Thêm");
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu1MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Xóa");
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu2MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Sửa");
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu3);
 
-        jMenu4.setText("Lưu");
-        jMenuBar1.add(jMenu4);
-
         jMenu5.setText("Bỏ qua");
+        jMenu5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu5MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu5);
 
         setJMenuBar(jMenuBar1);
@@ -164,17 +208,18 @@ public class frmMatHang extends javax.swing.JFrame {
                             .addComponent(txtGia))))
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtDVT, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
                             .addComponent(txtMatHang))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbVoHieuHoa, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbVoHieuHoa))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -200,10 +245,12 @@ public class frmMatHang extends javax.swing.JFrame {
                             .addComponent(txtDVT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbVoHieuHoa)
-                            .addComponent(txtGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel3)
+                                .addComponent(txtGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel8))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -225,8 +272,184 @@ public class frmMatHang extends javax.swing.JFrame {
         txtDVT.setText(tblMatHang.getValueAt(vitri, 3).toString());
         txtMoTa.setText(tblMatHang.getValueAt(vitri, 5).toString());
         txtGia.setText(tblMatHang.getValueAt(vitri,2 ).toString());
-    setSelectedCombobox(tblMatHang.getValueAt(vitri, 4).toString(),cbLoai);
+        //cbVoHieuHoa.setText(tblMatHang.getValueAt(vitri,6 ).toString());
+        if (tblMatHang.getValueAt(vitri,6 ).toString() == "true") {
+            cbVoHieuHoa.setSelected(true); // Đánh dấu checkbox là đã chọn
+        } else {
+            cbVoHieuHoa.setSelected(false); // Đánh dấu checkbox là không được chọn
+        }
+        cbLoai.setSelectedItem(tblMatHang.getValueAt(vitri, 4).toString());
+    
     }//GEN-LAST:event_tblMatHangMouseClicked
+
+    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
+        // TODO add your handling code here:
+           String selec = (String) cbLoai.getSelectedItem();
+//        System.out.println(selec);
+        String mamathang = txtMaMatHang.getText();
+        String mathang = txtMatHang.getText();
+        String dvt = txtDVT.getText();
+        String mota = txtMoTa.getText();
+        int gia = Integer.parseInt(txtGia.getText());
+       boolean vohieuhoa = Boolean.parseBoolean(cbVoHieuHoa.getText());
+
+        
+        
+        
+        Connection connection = null;
+        PreparedStatement statement = null;
+        
+        try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql = "insert into MAT_HANG(MAMH, TENMH, GIABAN, DVT, MALOAI,MOTA,VOHIEUHOA) values(N'"+mamathang+"',N'"+mathang+"','"+gia+"',N'"+dvt+"',N'"+selec+"',N'"+mota+"','"+vohieuhoa+"')";
+            statement = connection.prepareCall(sql);        
+                            
+            
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        showStudent();
+    }//GEN-LAST:event_jMenu1MouseClicked
+
+    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
+        // TODO add your handling code here:
+        Connection connection = null;
+        PreparedStatement statement = null;
+        String mamathang = txtMaMatHang.getText();
+        String mathang = txtMatHang.getText();
+        String dvt = txtDVT.getText();
+        String mota = txtMoTa.getText();
+        int gia = Integer.parseInt(txtGia.getText());
+        boolean vohieuhoa = Boolean.parseBoolean(cbVoHieuHoa.getText());
+      //  boolean vohieuhoa = true;
+        String selec = (String) cbLoai.getSelectedItem();
+
+        
+          try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql = "UPDATE MAT_HANG SET TENMH = N'"+mathang+"', GIABAN = '"+gia+"', DVT = N'"+dvt+"', MALOAI= '"+selec+"', MOTA =N'"+mota+"',VOHIEUHOA = '"+vohieuhoa+"' WHERE MAMH = '"+mamathang+"';";
+           
+            statement = connection.prepareCall(sql);
+
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+                
+                showStudent();
+            
+
+    }//GEN-LAST:event_jMenu3MouseClicked
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+        // TODO add your handling code here:
+        int selectedIndex = tblMatHang.getSelectedRow();
+        String mamathang = txtMaMatHang.getText();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        
+        if(selectedIndex >= 0) {
+            MatHang std = studentList.get(selectedIndex);
+            
+            int option = JOptionPane.showConfirmDialog(this, "Muốn xóa không ?");
+            System.out.println("option : " + option);
+            
+            if(option == 0) {
+                
+                try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql = "delete from MAT_HANG where MAMH = '"+mamathang+"'";
+            statement = connection.prepareCall(sql);
+
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+                
+                showStudent();
+            }
+        }
+        
+        //ket thuc.
+    
+    }//GEN-LAST:event_jMenu2MouseClicked
+
+    private void cbVoHieuHoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbVoHieuHoaActionPerformed
+        // TODO add your handling code here:
+        checkForm();
+    }//GEN-LAST:event_cbVoHieuHoaActionPerformed
+
+    private void jMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu5MouseClicked
+        // TODO add your handling code here:
+        txtMatHang.setText("");
+        txtMaMatHang.setText("");
+        txtDVT.setText("");
+        txtGia.setText("");
+        txtMoTa.setText("");
+        cbLoai.setSelectedIndex(0);
+        cbVoHieuHoa.setSelected(false);
+    }//GEN-LAST:event_jMenu5MouseClicked
 
     /**
      * @param args the command line arguments
@@ -272,10 +495,10 @@ public class frmMatHang extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -287,15 +510,5 @@ public class frmMatHang extends javax.swing.JFrame {
     private javax.swing.JTextField txtMatHang;
     private javax.swing.JTextArea txtMoTa;
     // End of variables declaration//GEN-END:variables
-public void setSelectedCombobox(String cbbselected, JComboBox cbb) {
-        for (int i = 0; i < cbb.getItemCount(); i++) {
-            Object obj = cbb.getItemAt(i);
-            if (obj != null) {
-                displayvalueModel m = (displayvalueModel) obj;
-                if (cbbselected.trim().equals(m.displayMember)) {
-                    cbb.setSelectedItem(m);
-                }
-            }
-        }
-    }
+
 }

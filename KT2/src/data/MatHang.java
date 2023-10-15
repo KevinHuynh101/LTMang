@@ -75,7 +75,8 @@ public class MatHang {
     }
 
     public boolean isVoHieuHoa() {
-        return VoHieuHoa;
+        
+        return VoHieuHoa ;
     }
 
     public void setVoHieuHoa(boolean VoHieuHoa) {

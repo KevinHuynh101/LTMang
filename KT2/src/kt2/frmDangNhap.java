@@ -5,8 +5,12 @@
 package kt2;
 
 import data.DbAccess;
+import data.NhanVien;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,8 +24,10 @@ public class frmDangNhap extends javax.swing.JFrame {
     public frmDangNhap() {
         initComponents();
                 setLocationRelativeTo(null);
+                
+                
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -109,21 +115,53 @@ public class frmDangNhap extends javax.swing.JFrame {
 
     private void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangNhapActionPerformed
         // TODO add your handling code here:
-        
+        List<NhanVien> studentList = new ArrayList<>();
+        DefaultTableModel tableModel = null;
+        PreparedStatement statement = null;
+        boolean s= true ;
         try {
             String userName = txtUserName.getText();
             String password = new String(txtpassword.getPassword());
 
             DbAccess acc = new DbAccess();
             String QueryStr = "select * from NHAN_VIEN where TENDANGNHAP ='" + userName + "' and MATKHAU='" + password + "'";
-            ResultSet rs = null;
-             rs = acc.Query(QueryStr);
+            
+            //ResultSet rs = statement.executeQuery(QueryStr);
+            ResultSet rs = acc.Query(QueryStr);
+            
+           while (rs.next()) {                
+                NhanVien std = new NhanVien(rs.getString("MANHANVIEN"), 
+                        rs.getString("TENNHANVIEN"),rs.getInt("SDT"), 
+                        rs.getString("DIACHI"),rs.getString("TENDANGNHAP")
+                        ,rs.getString("MATKHAU"),rs.getBoolean("LAQUANLY"));
+                s= std.isLaquanly();
+              
+            }
+           
+           ResultSet rs1 = acc.Query(QueryStr);
+           
+             
+            System.out.println(s);
             
             System.out.println(rs);
-            if (rs.next()) 
-            {
-               JOptionPane.showMessageDialog(this, "Dang nhap thanh cong");
-            } else {
+          
+           // DbAccess.pass(password);
+            if (rs1.next()){ 
+                
+                if(s == true)
+                {
+                    JOptionPane.showMessageDialog(this, "Quản lý đăng nhập thành công ");
+                    frmNV frm = new frmNV();
+                    frm.setVisible(true);
+                    dispose();
+                }else {
+                    JOptionPane.showMessageDialog(this, "Nhân viên đăng nhập thành công ");
+                    frmMatHang frm = new frmMatHang();
+                    frm.setVisible(true);
+                    dispose();
+                } 
+            }
+            else {
                 JOptionPane.showMessageDialog(this, "Dang nhap that bai");
             }
         } catch (Exception ex) {
@@ -163,6 +201,7 @@ public class frmDangNhap extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new frmDangNhap().setVisible(true);
+                
             }
         });
     }

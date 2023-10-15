@@ -27,14 +27,7 @@ public class DbAccess {
         }
     }
     
-    public int update(String str){
-        try{
-            int i = stmt.executeUpdate(str);
-            return i;
-        }catch(Exception ex){
-            return -1;
-        }
-    }
+    
     
     public ResultSet Query(String str){
         try{
@@ -53,13 +46,13 @@ public class DbAccess {
             //lay tat ca danh sach sinh vien
             String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
                     "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
-            System.out.println(URL);
+//            System.out.println(URL);
             connection = DriverManager.getConnection(URL);
             String sql = "select * from NHAN_VIEN where LAQUANLY =1;";
             
             statement = connection.createStatement();           
             ResultSet resultSet = statement.executeQuery(sql);
-            System.out.println(resultSet);
+//            System.out.println(resultSet);
             
             while (resultSet.next()) {                
                 NhanVien std = new NhanVien(resultSet.getString("MANHANVIEN"), 
@@ -100,13 +93,13 @@ public class DbAccess {
             //lay tat ca danh sach sinh vien
             String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
                     "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
-            System.out.println(URL);
+//            System.out.println(URL);
             connection = DriverManager.getConnection(URL);
             String sql = "select * from NHAN_VIEN where LAQUANLY =0;";
             
             statement = connection.createStatement();           
             ResultSet resultSet = statement.executeQuery(sql);
-            System.out.println(resultSet);
+//            System.out.println(resultSet);
             
             while (resultSet.next()) {                
                 NhanVien std = new NhanVien(resultSet.getString("MANHANVIEN"), 
@@ -233,5 +226,59 @@ public class DbAccess {
          return studentList;
     }
     
+    public String pass (String pass){
+      return pass;       
+    }
+    public static List<NhanVien> findTaiKhoan() {
+        List<NhanVien> studentList = new ArrayList<>();
+         Connection connection = null;
+        Statement statement = null;
+        try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+//            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql = "select * from NHAN_VIEN ;";
+            
+            statement = connection.createStatement();           
+            ResultSet resultSet = statement.executeQuery(sql);
+//            System.out.println(resultSet);
+            
+            while (resultSet.next()) {                
+                NhanVien std = new NhanVien(resultSet.getString("MANHANVIEN"), 
+                        resultSet.getString("TENNHANVIEN"),resultSet.getInt("SDT"), 
+                        resultSet.getString("DIACHI"),resultSet.getString("TENDANGNHAP")
+                        ,resultSet.getString("MATKHAU"),resultSet.getBoolean("LAQUANLY"));
+                studentList.add(std);
+            }
+            System.out.println(studentList);
+        }catch (SQLException ex) {
+            Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        //ket thuc.
+         return studentList;
+    }
     
+    
+//
+
+        
+        
 }
