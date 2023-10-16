@@ -9,8 +9,11 @@ import data.NhanVien;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -116,8 +119,7 @@ public class frmDangNhap extends javax.swing.JFrame {
     private void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangNhapActionPerformed
         // TODO add your handling code here:
         List<NhanVien> studentList = new ArrayList<>();
-        DefaultTableModel tableModel = null;
-        PreparedStatement statement = null;
+
         boolean s= true ;
         try {
             String userName = txtUserName.getText();
@@ -144,6 +146,7 @@ public class frmDangNhap extends javax.swing.JFrame {
             System.out.println(s);
             
             System.out.println(rs);
+            pass();
           
            // DbAccess.pass(password);
             if (rs1.next()){ 
@@ -214,4 +217,45 @@ public class frmDangNhap extends javax.swing.JFrame {
     private javax.swing.JTextField txtUserName;
     private javax.swing.JPasswordField txtpassword;
     // End of variables declaration//GEN-END:variables
+public void pass(){
+        Connection connection = null;
+        PreparedStatement statement = null;
+        String userName = txtUserName.getText();
+        String password = new String(txtpassword.getPassword());
+
+        
+          try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql = "UPDATE PASS SET  PASS =N'"+password+"' WHERE id = 1;";
+           
+            statement = connection.prepareCall(sql);
+
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+                
+             
+    }
+
 }

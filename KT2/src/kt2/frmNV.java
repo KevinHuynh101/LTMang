@@ -235,51 +235,32 @@ public class frmNV extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        Connection connection = null;
-        PreparedStatement statement = null;
+//        Connection connection = null;
+//        PreparedStatement statement = null;
+        int selectedIndex = tbNV.getSelectedRow();
         
         int vitri = tbNV.getSelectedRow();
         String manv = tbNV.getValueAt(vitri, 0).toString();
-        
-//        String TenNV = tbNV.getValueAt(vitri, 1).toString();
-//        int sdt = Integer.parseInt(tbNV.getValueAt(vitri, 2).toString());
-//        String diachi = tbNV.getValueAt(vitri, 3).toString();
-        
+        String TenNV = tbNV.getValueAt(vitri, 1).toString();
         boolean quanly = Boolean.parseBoolean(tbNV.getValueAt(vitri, 4).toString());
-        
-          try {
-            //lay tat ca danh sach sinh vien
-            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
-                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
-            
-            connection = DriverManager.getConnection(URL);
-            String sql = "UPDATE NHAN_VIEN SET LAQUANLY = '"+quanly+"' WHERE MANHANVIEN = '"+manv+"';";
-           
-            statement = connection.prepareCall(sql);
-            
-            statement.execute();
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(frmNV.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if(statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(frmNV.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(frmNV.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        if(selectedIndex >= 0) {
+//            int option = JOptionPane.showConfirmDialog(this, "Muốn chắc chắn muốn hủy quyền cuả "+TenNV);
+            int option = JOptionPane.showConfirmDialog(this, 
+                 "Bạn  chắc chắn muốn cấp quyền quản trị cho "+TenNV, "Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
+            if(option == 0) {
+              DbAccess.pass(manv, quanly);
+              frmXacNhan frm = new frmXacNhan();
+               frm.setVisible(true);
+               dispose();
+//                       
+        }else
+            {
+                showNVQuanly();
+                showNV();  
+            }            
         }
-         showNVQuanly();
-         showNV();                         
+            
+//                 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -291,46 +272,17 @@ public class frmNV extends javax.swing.JFrame {
         String maql = tblQuanLy.getValueAt(vitri, 0).toString();
         String TenNV = tblQuanLy.getValueAt(vitri, 1).toString();
         boolean quanly0 = Boolean.parseBoolean(tblQuanLy.getValueAt(vitri, 4).toString());
-        System.out.println(quanly0);
+//        System.out.println(quanly0);
         if(selectedIndex >= 0) {
 //            int option = JOptionPane.showConfirmDialog(this, "Muốn chắc chắn muốn hủy quyền cuả "+TenNV);
             int option = JOptionPane.showConfirmDialog(this, 
-                 "Bạn  chắc chắn muốn hủy quyền cuả "+TenNV, "Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
+                 "Bạn  chắc chắn muốn hủy quyền quản trị cuả "+TenNV, "Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
             if(option == 0) {
+              DbAccess.pass(maql, quanly0);
               frmXacNhan frm = new frmXacNhan();
                frm.setVisible(true);
-//            try {
-//            //lay tat ca danh sach sinh vien
-//            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
-//                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
-//            
-//            connection = DriverManager.getConnection(URL);
-//            String sql1 = "UPDATE NHAN_VIEN SET LAQUANLY = '"+quanly0+"' WHERE MANHANVIEN = '"+maql+"';";
-//            
-//            statement = connection.prepareCall(sql1);
-//            statement.execute();
-//           
-//            } catch (SQLException ex) {
-//            Logger.getLogger(frmNV.class.getName()).log(Level.SEVERE, null, ex);
-//            } finally {
-//            if(statement != null) {
-//                try {
-//                    statement.close();
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(frmNV.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//            
-//            if (connection != null) {
-//                try {
-//                    connection.close();
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(frmNV.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        }
-//         showNVQuanly();
-//         showNV();                 
+               dispose();
+//                       
         }else
             {
                 showNVQuanly();

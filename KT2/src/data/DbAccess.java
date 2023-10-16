@@ -141,7 +141,7 @@ public class DbAccess {
             //lay tat ca danh sach sinh vien
             String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
                     "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
-            System.out.println(URL);
+//            System.out.println(URL);
             connection = DriverManager.getConnection(URL);
             String sql = "select * from MAT_HANG ;";
             
@@ -189,7 +189,7 @@ public class DbAccess {
             //lay tat ca danh sach sinh vien
             String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
                     "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
-            System.out.println(URL);
+//            System.out.println(URL);
             connection = DriverManager.getConnection(URL);
             String sql = "select * from LOAI_MAT_HANG ;";
             
@@ -276,7 +276,44 @@ public class DbAccess {
          return studentList;
     }
     
-    
+    public static void pass(String maquanly,boolean quanly){
+        Connection connection = null;
+        PreparedStatement statement = null;
+        
+        
+          try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql = "UPDATE PASS SET  s1 =N'"+maquanly+"' , s2 = '"+quanly+"' WHERE id = 1;";
+           
+            statement = connection.prepareCall(sql);
+
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+                
+             
+    }
 //
 
         

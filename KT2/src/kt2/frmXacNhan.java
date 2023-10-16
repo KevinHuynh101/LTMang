@@ -4,6 +4,18 @@
  */
 package kt2;
 import data.DbAccess;
+import data.NhanVien;
+import data.Pass;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import kt2.frmDangNhap;
 
 /**
@@ -51,6 +63,11 @@ public class frmXacNhan extends javax.swing.JFrame {
         });
 
         jButton2.setText("No");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -91,14 +108,54 @@ public class frmXacNhan extends javax.swing.JFrame {
     }//GEN-LAST:event_txtpassActionPerformed
 
     private void btnYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnYesActionPerformed
-        // TODO add your handling code here:
-        DbAccess acc = new DbAccess();
-        String s2 = kt2.frmDangNhap.
-        String password = new String(txtpass.getPassword());
+        List<Pass> studentList = new ArrayList<>();
+        String s= "" ;
+        String pass = new String(txtpass.getPassword());
+        String s1 = "";
+        boolean s2 = true ;
         
-        boolean sosanh =s1.equals(s2);
+        try {
+            DbAccess acc = new DbAccess();
+            String QueryStr = "select * from PASS ";            
+            ResultSet rs = acc.Query(QueryStr);
+            
+           while (rs.next()) {                
+                Pass std = new Pass(rs.getInt("id"), 
+                        rs.getString("PASS"),rs.getString("S1"),rs.getBoolean("S2"));
+                s= std.getPass();      
+                s1 =std.getS1();
+                s2 = std.isS2();
+            }
+//            System.out.println(s);
+            boolean sosanh =pass.equals(s);
+            if(sosanh == true){
+                JOptionPane.showMessageDialog(this, "Xác nhận mật khẩu thành công ");
+                update(s1,s2);
+                frmNV frm = new frmNV();
+                frm.setVisible(true);
+                
+                dispose();
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Mật khẩu không đúng ");
+            }
+           // DbAccess.pass(password);
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        
         
     }//GEN-LAST:event_btnYesActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        frmNV frm = new frmNV();
+                frm.setVisible(true);
+                
+                dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -141,4 +198,40 @@ public class frmXacNhan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPasswordField txtpass;
     // End of variables declaration//GEN-END:variables
+    public void update(String maquanly,boolean quanly){
+        Connection connection = null;
+        PreparedStatement statement = null;
+        
+        
+          try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql ="UPDATE NHAN_VIEN SET LAQUANLY = '"+quanly+"' WHERE MANHANVIEN = '"+maquanly+"';";
+           
+            statement = connection.prepareCall(sql);
+
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
 }
