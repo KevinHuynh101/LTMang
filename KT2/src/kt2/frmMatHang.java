@@ -319,8 +319,11 @@ public class frmMatHang extends javax.swing.JFrame {
         
         Connection connection = null;
         PreparedStatement statement = null;
-        
-        try {
+        if(mamathang.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Không được để trống mã mặt hàng ");
+        }
+        else{
+            try {
             //lay tat ca danh sach sinh vien
             String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
                     "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
@@ -351,6 +354,8 @@ public class frmMatHang extends javax.swing.JFrame {
             }
         }
         showStudent();
+        }
+        
     }//GEN-LAST:event_jMenu1MouseClicked
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
@@ -366,8 +371,11 @@ public class frmMatHang extends javax.swing.JFrame {
       //  boolean vohieuhoa = true;
         String selec = (String) cbLoai.getSelectedItem();
 
-        
-          try {
+        if(mamathang.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Không được để trống mã mặt hàng ");
+        }
+        else{
+             try {
             //lay tat ca danh sach sinh vien
             String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
                     "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
@@ -398,7 +406,9 @@ public class frmMatHang extends javax.swing.JFrame {
             }
         }
                 
-                showStudent();
+                showStudent(); 
+        }
+        
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked

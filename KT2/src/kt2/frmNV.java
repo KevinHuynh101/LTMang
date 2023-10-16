@@ -122,6 +122,11 @@ public class frmNV extends javax.swing.JFrame {
                 tblQuanLyMouseClicked(evt);
             }
         });
+        tblQuanLy.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tblQuanLyPropertyChange(evt);
+            }
+        });
         jScrollPane5.setViewportView(tblQuanLy);
         if (tblQuanLy.getColumnModel().getColumnCount() > 0) {
             tblQuanLy.getColumnModel().getColumn(4).setPreferredWidth(65);
@@ -309,6 +314,11 @@ public class frmNV extends javax.swing.JFrame {
         frm.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void tblQuanLyPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblQuanLyPropertyChange
+        // TODO add your handling code here:
+   
+    }//GEN-LAST:event_tblQuanLyPropertyChange
 
     /**
      * @param args the command line arguments
