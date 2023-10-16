@@ -4,19 +4,60 @@
  */
 package kt2;
 
+import data.DbAccess;
+import data.LoaiMatHang;
+import data.MatHang;
+import data.Pass;
+import java.beans.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author kimdo
  */
 public class frmLoaiMatHang extends javax.swing.JFrame {
-
+    DefaultTableModel tableModel;
+    List<LoaiMatHang> studentList = new ArrayList<>();
     /**
      * Creates new form frmLoaiMatHang
      */
     public frmLoaiMatHang() {
         initComponents();
+        tableModel = (DefaultTableModel) tblLoai.getModel();
+        showLoai();
     }
-
+     private void showLoai() {
+        studentList = DbAccess.findLoai();
+        
+        tableModel.setRowCount(0);
+        
+        studentList.forEach((student) -> {
+            tableModel.addRow(new Object[] { student.getMaloai(), 
+                student.getTenLoai(), student.isVoHieuHoa()});
+        cbVoHieuHoa.setText(null);
+        });    
+    }
+     private void checkForm(){
+        StringBuffer sb= new StringBuffer();
+        if(cbVoHieuHoa.isSelected())
+        {
+            sb.append("True");
+        }
+        else
+                sb.append("False");
+        cbVoHieuHoa.setText(sb.toString());
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,26 +67,120 @@ public class frmLoaiMatHang extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblLoai = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        txtMa = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtMatHang = new javax.swing.JTextField();
+        cbVoHieuHoa = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
+        btnThem = new javax.swing.JMenu();
+        btnSua = new javax.swing.JMenu();
+        btnXoa = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
+        btnLuu = new javax.swing.JMenu();
+        jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Danh sách loại mặt hàng");
 
-        jMenu1.setText("Thêm");
-        jMenuBar1.add(jMenu1);
+        tblLoai.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Mã loại", "Tên loại", "Vô hiệu hóa"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+            };
 
-        jMenu2.setText("Sửa");
-        jMenuBar1.add(jMenu2);
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        tblLoai.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblLoaiMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblLoai);
+        if (tblLoai.getColumnModel().getColumnCount() > 0) {
+            tblLoai.getColumnModel().getColumn(2).setPreferredWidth(85);
+            tblLoai.getColumnModel().getColumn(2).setMaxWidth(85);
+        }
 
-        jMenu3.setText("Xóa");
-        jMenuBar1.add(jMenu3);
+        jLabel1.setText("Mã loại mặt hàng ");
+
+        txtMa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMaActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Mặt hàng ");
+
+        cbVoHieuHoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbVoHieuHoaActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Vô hiệu hóa");
+
+        btnThem.setText("Thêm");
+        btnThem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnThemMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(btnThem);
+
+        btnSua.setText("Sửa");
+        btnSua.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSuaMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(btnSua);
+
+        btnXoa.setText("Xóa");
+        btnXoa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnXoaMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(btnXoa);
 
         jMenu4.setText("Bỏ qua");
+        jMenu4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu4MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu4);
+
+        btnLuu.setText("Lưu");
+        btnLuu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLuuMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(btnLuu);
+
+        jMenu1.setText("Quay lại");
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu1MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
 
@@ -53,15 +188,270 @@ public class frmLoaiMatHang extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtMa))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cbVoHieuHoa)
+                                        .addGap(161, 220, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(21, 21, 21)
+                                        .addComponent(txtMatHang)))))))
+                .addGap(18, 18, 18))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 277, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtMa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtMatHang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbVoHieuHoa)
+                    .addComponent(jLabel3))
+                .addGap(0, 17, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtMaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMaActionPerformed
+
+    private void tblLoaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLoaiMouseClicked
+        // TODO add your handling code here:
+        int vitri = tblLoai.getSelectedRow();
+        txtMa.setText(tblLoai.getValueAt(vitri, 0).toString());
+        txtMatHang.setText(tblLoai.getValueAt(vitri, 1).toString());
+        
+        //cbVoHieuHoa.setText(tblMatHang.getValueAt(vitri,6 ).toString());
+        if (tblLoai.getValueAt(vitri,2).toString() == "true") {
+            cbVoHieuHoa.setSelected(true); // Đánh dấu checkbox là đã chọn
+        } else {
+            cbVoHieuHoa.setSelected(false); // Đánh dấu checkbox là không được chọn
+        }
+        
+    
+    }//GEN-LAST:event_tblLoaiMouseClicked
+
+    private void cbVoHieuHoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbVoHieuHoaActionPerformed
+        // TODO add your handling code here:
+        checkForm();
+    }//GEN-LAST:event_cbVoHieuHoaActionPerformed
+
+    private void btnThemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnThemMouseClicked
+        // TODO add your handling code here:
+        String maloai = txtMa.getText();
+        String mathang = txtMatHang.getText();
+        boolean vohieuhoa = Boolean.parseBoolean(cbVoHieuHoa.getText()); 
+        Connection connection = null;
+        PreparedStatement statement = null;
+        
+        try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+           
+            connection = DriverManager.getConnection(URL);
+            String sql = "insert into LOAI_MAT_HANG(MALOAI, TENLOAI,VOHIEUHOA) values(N'"+maloai+"',N'"+mathang+"','"+vohieuhoa+"')";
+            statement = connection.prepareCall(sql);        
+                            
+            
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmLoaiMatHang.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmLoaiMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmLoaiMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        showLoai();
+    }//GEN-LAST:event_btnThemMouseClicked
+
+    private void btnXoaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnXoaMouseClicked
+        // TODO add your handling code here:
+            int selectedIndex = tblLoai.getSelectedRow();
+        String maloai = txtMa.getText();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        
+        if(selectedIndex >= 0) {
+            LoaiMatHang std = studentList.get(selectedIndex);
+            
+            int option = JOptionPane.showConfirmDialog(this, "Muốn xóa không ?");
+//            System.out.println("option : " + option);
+            
+            if(option == 0) { 
+                try {
+           
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql = "delete from LOAI_MAT_HANG where MALOAI = '"+maloai+"'";
+            statement = connection.prepareCall(sql);
+
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+                
+                showLoai();
+            }
+        }
+        
+        //ket thuc.
+    
+    }//GEN-LAST:event_btnXoaMouseClicked
+
+    private void jMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MouseClicked
+        // TODO add your handling code here:        txtMatHang.setText("");
+        txtMa.setText("");
+        txtMatHang.setText("");
+        cbVoHieuHoa.setSelected(false);
+    }//GEN-LAST:event_jMenu4MouseClicked
+
+    private void btnSuaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSuaMouseClicked
+        // TODO add your handling code here:
+        Connection connection = null;
+        PreparedStatement statement = null;
+        String maloai = txtMa.getText();
+        String mathang = txtMatHang.getText();
+        boolean vohieuhoa = Boolean.parseBoolean(cbVoHieuHoa.getText());        
+        try {
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+            connection = DriverManager.getConnection(URL);
+            String sql = "UPDATE LOAI_MAT_HANG SET TENLOAI = N'"+mathang+"',VOHIEUHOA = '"+vohieuhoa+"' WHERE MALOAI = '"+maloai+"';";
+           
+            statement = connection.prepareCall(sql);
+
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+                
+                showLoai();
+            
+    }//GEN-LAST:event_btnSuaMouseClicked
+
+    private void btnLuuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLuuMouseClicked
+        // TODO add your handling code here:
+        List<LoaiMatHang> studentList = new ArrayList<>();
+         Connection connection = null;
+       PreparedStatement statement = null;
+        int selectedIndex = tblLoai.getSelectedRow();        
+        int vitri = tblLoai.getSelectedRow();
+        String maloai = tblLoai.getValueAt(vitri, 0).toString();
+        String tenloai = tblLoai.getValueAt(vitri, 1).toString();
+        boolean vohieuhoa = Boolean.parseBoolean(tblLoai.getValueAt(vitri, 2).toString());   
+         try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql = "UPDATE LOAI_MAT_HANG SET VOHIEUHOA = '"+vohieuhoa+"' WHERE MALOAI = '"+maloai+"';";
+           
+            statement = connection.prepareCall(sql);
+
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+                
+                showLoai(); 
+       
+    }//GEN-LAST:event_btnLuuMouseClicked
+
+    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
+        // TODO add your handling code here:
+        frmMatHang frm = new  frmMatHang();
+        frm.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jMenu1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -99,10 +489,20 @@ public class frmLoaiMatHang extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu btnLuu;
+    private javax.swing.JMenu btnSua;
+    private javax.swing.JMenu btnThem;
+    private javax.swing.JMenu btnXoa;
+    private javax.swing.JCheckBox cbVoHieuHoa;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblLoai;
+    private javax.swing.JTextField txtMa;
+    private javax.swing.JTextField txtMatHang;
     // End of variables declaration//GEN-END:variables
 }

@@ -191,7 +191,7 @@ public class DbAccess {
                     "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
 //            System.out.println(URL);
             connection = DriverManager.getConnection(URL);
-            String sql = "select * from LOAI_MAT_HANG ;";
+            String sql = "select * from LOAI_MAT_HANG WHERE VOHIEUHOA = 'false';";
             
             statement = connection.createStatement();           
             ResultSet resultSet = statement.executeQuery(sql);
@@ -226,9 +226,7 @@ public class DbAccess {
          return studentList;
     }
     
-    public String pass (String pass){
-      return pass;       
-    }
+
     public static List<NhanVien> findTaiKhoan() {
         List<NhanVien> studentList = new ArrayList<>();
          Connection connection = null;
@@ -314,7 +312,53 @@ public class DbAccess {
                 
              
     }
-//
+    
+    public static List<LoaiMatHang> findLoai() {
+        List<LoaiMatHang> studentList = new ArrayList<>();
+         Connection connection = null;
+        Statement statement = null;
+        try {
+            //lay tat ca danh sach sinh vien
+            String URL = "jdbc:sqlserver://NAMHUYNH\\SQLEXPRESS:1433;"+
+                    "databaseName=VANPHONGPHAM;user=sa;password=12345;encrypt=false";
+//            System.out.println(URL);
+            connection = DriverManager.getConnection(URL);
+            String sql = "select * from LOAI_MAT_HANG ;";
+            
+            statement = connection.createStatement();           
+            ResultSet resultSet = statement.executeQuery(sql);
+            System.out.println(resultSet);
+            
+            while (resultSet.next()) {                
+                 LoaiMatHang std = new LoaiMatHang(resultSet.getString("MALOAI"), 
+                        resultSet.getString("TENLOAI"),resultSet.getBoolean("VOHIEUHOA"));
+                studentList.add(std);   
+                
+            }
+//            System.out.println(studentList);
+        }catch (SQLException ex) {
+            Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DbAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        //ket thuc.
+         return studentList;
+    
+    }
 
         
         

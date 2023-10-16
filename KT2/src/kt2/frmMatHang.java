@@ -54,7 +54,8 @@ public class frmMatHang extends javax.swing.JFrame {
             tableModel.addRow(new Object[] { student.getMaMH(), 
                 student.getTenMH(), student.getGia(), student.getDVT(),student.getMaLoai()
                 ,student.getMoTa(),student.isVoHieuHoa()});
-        });    
+        });
+        cbVoHieuHoa.setText(null);
     }
     String c ;
     private void checkForm(){
@@ -95,11 +96,13 @@ public class frmMatHang extends javax.swing.JFrame {
         txtMoTa = new javax.swing.JTextArea();
         txtGia = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        btnCong = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
+        btnDangXuat = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Danh sách mặt hàng");
@@ -152,6 +155,13 @@ public class frmMatHang extends javax.swing.JFrame {
 
         jLabel8.setText("Vô hiệu hóa");
 
+        btnCong.setText("+");
+        btnCong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCongActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("Thêm");
         jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -184,6 +194,14 @@ public class frmMatHang extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenu5);
 
+        btnDangXuat.setText("Đăng xuất");
+        btnDangXuat.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDangXuatMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(btnDangXuat);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -206,7 +224,9 @@ public class frmMatHang extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtMaMatHang, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
                             .addComponent(txtGia))))
-                .addGap(42, 42, 42)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCong)
+                .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,7 +257,8 @@ public class frmMatHang extends javax.swing.JFrame {
                             .addComponent(cbLoai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtMatHang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel6))
+                            .addComponent(jLabel6)
+                            .addComponent(btnCong))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -378,8 +399,6 @@ public class frmMatHang extends javax.swing.JFrame {
         }
                 
                 showStudent();
-            
-
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
@@ -425,9 +444,8 @@ public class frmMatHang extends javax.swing.JFrame {
                     Logger.getLogger(frmMatHang.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }
-                
-                showStudent();
+        }                
+        showStudent();
             }
         }
         
@@ -450,6 +468,20 @@ public class frmMatHang extends javax.swing.JFrame {
         cbLoai.setSelectedIndex(0);
         cbVoHieuHoa.setSelected(false);
     }//GEN-LAST:event_jMenu5MouseClicked
+
+    private void btnCongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCongActionPerformed
+        // TODO add your handling code here:
+        frmLoaiMatHang frm = new  frmLoaiMatHang();
+        frm.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnCongActionPerformed
+
+    private void btnDangXuatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDangXuatMouseClicked
+        // TODO add your handling code here:
+        frmDangNhap frm = new  frmDangNhap();
+        frm.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnDangXuatMouseClicked
 
     /**
      * @param args the command line arguments
@@ -487,6 +519,8 @@ public class frmMatHang extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCong;
+    private javax.swing.JMenu btnDangXuat;
     private javax.swing.JComboBox<String> cbLoai;
     private javax.swing.JCheckBox cbVoHieuHoa;
     private javax.swing.JLabel jLabel1;
