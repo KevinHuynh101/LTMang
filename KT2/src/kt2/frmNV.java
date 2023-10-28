@@ -84,8 +84,6 @@ public class frmNV extends javax.swing.JFrame {
         tbNV = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
         jMenu4.setText("jMenu4");
@@ -121,6 +119,9 @@ public class frmNV extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblQuanLyMouseClicked(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tblQuanLyMouseReleased(evt);
+            }
         });
         tblQuanLy.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -152,6 +153,11 @@ public class frmNV extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        tbNV.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tbNVMouseReleased(evt);
+            }
+        });
         tbNV.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 tbNVPropertyChange(evt);
@@ -166,20 +172,6 @@ public class frmNV extends javax.swing.JFrame {
         jLabel1.setText("Nhân viên ");
 
         jLabel2.setText("Nhân viên quản lý");
-
-        jButton1.setText("Xác nhận ");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Xác nhận");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
 
         jButton3.setText("Mặt hàng");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -200,14 +192,9 @@ public class frmNV extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 717, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGap(18, 18, 18)
                             .addComponent(jButton3))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(53, 53, 53)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -216,14 +203,11 @@ public class frmNV extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jButton2)
                     .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1))
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16))
@@ -249,37 +233,19 @@ public class frmNV extends javax.swing.JFrame {
                                   
     }//GEN-LAST:event_tbNVPropertyChange
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-//        Connection connection = null;
-//        PreparedStatement statement = null;
-        int selectedIndex = tbNV.getSelectedRow();
-        
-        int vitri = tbNV.getSelectedRow();
-        String manv = tbNV.getValueAt(vitri, 0).toString();
-        String TenNV = tbNV.getValueAt(vitri, 1).toString();
-        boolean quanly = Boolean.parseBoolean(tbNV.getValueAt(vitri, 4).toString());
-        if(selectedIndex >= 0) {
-//            int option = JOptionPane.showConfirmDialog(this, "Muốn chắc chắn muốn hủy quyền cuả "+TenNV);
-            int option = JOptionPane.showConfirmDialog(this, 
-                 "Bạn  chắc chắn muốn cấp quyền quản trị cho "+TenNV, "Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
-            if(option == 0) {
-              DbAccess.pass(manv, quanly);
-              frmXacNhan frm = new frmXacNhan();
-               frm.setVisible(true);
-               dispose();
-//                       
-        }else
-            {
-                showNVQuanly();
-                showNV();  
-            }            
-        }
-            
-//                 
-    }//GEN-LAST:event_jButton1ActionPerformed
+        frmMatHang frm = new  frmMatHang();
+        frm.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void tblQuanLyPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblQuanLyPropertyChange
+        // TODO add your handling code here:
+   
+    }//GEN-LAST:event_tblQuanLyPropertyChange
+
+    private void tblQuanLyMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblQuanLyMouseReleased
         // TODO add your handling code here:
         int selectedIndex = tblQuanLy.getSelectedRow();
         Connection connection = null;
@@ -305,20 +271,35 @@ public class frmNV extends javax.swing.JFrame {
                 showNV();  
             }            
         }
-            
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_tblQuanLyMouseReleased
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        frmMatHang frm = new  frmMatHang();
-        frm.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void tblQuanLyPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblQuanLyPropertyChange
-        // TODO add your handling code here:
-   
-    }//GEN-LAST:event_tblQuanLyPropertyChange
+    private void tbNVMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbNVMouseReleased
+        //TODO add your handling code here:
+        //        Connection connection = null;
+//       PreparedStatement statement = null;
+        int selectedIndex = tbNV.getSelectedRow();
+        
+        int vitri = tbNV.getSelectedRow();
+        String manv = tbNV.getValueAt(vitri, 0).toString();
+        String TenNV = tbNV.getValueAt(vitri, 1).toString();
+        boolean quanly = Boolean.parseBoolean(tbNV.getValueAt(vitri, 4).toString());
+        if(selectedIndex >= 0) {
+//            int option = JOptionPane.showConfirmDialog(this, "Muốn chắc chắn muốn hủy quyền cuả "+TenNV);
+            int option = JOptionPane.showConfirmDialog(this, 
+                 "Bạn  chắc chắn muốn cấp quyền quản trị cho "+TenNV, "Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
+            if(option == 0) {
+              DbAccess.pass(manv, quanly);
+              frmXacNhan frm = new frmXacNhan();
+               frm.setVisible(true);
+               dispose();
+//                       
+        }else
+            {
+                showNVQuanly();
+                showNV();  
+            }            
+        }
+    }//GEN-LAST:event_tbNVMouseReleased
 
     /**
      * @param args the command line arguments
@@ -359,8 +340,6 @@ public class frmNV extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
